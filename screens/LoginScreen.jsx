@@ -30,11 +30,12 @@ function LoginScreen ({ navigation })  {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         // backgroundColor: 'grey',
-        marginLeft: 24,
-        marginRight: 24,
-        marginBottom: 24,
-        marginTop: '13%',
+        paddingLeft: 24,
+        paddingRight: 24,
+        paddingBottom: 24,
+        paddingTop: 75,
         backgroundColor: '#000032',
     },
     body: {
