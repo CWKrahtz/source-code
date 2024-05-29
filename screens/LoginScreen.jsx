@@ -1,17 +1,63 @@
 import { StyleSheet, View, Text, TextInput, Pressable, ScrollView } from 'react-native'
-import React, { useState }  from 'react'
+import React, { useCallback, useReducer, useState } from 'react'
 
 import { handleLogin } from '../authService'
+import Input from '../components/Input'
+import { reducer } from '../utils/reducers/formReducers'
+import { validateInput } from '../utils/actions/formAction';
+
+const isTestMode = true;
+
+const initialState = {
+    inputValues: {
+        email: isTestMode ? "example@gmail.com" : "",
+        password: isTestMode ? "**********" : "",
+    },
+    inputValidities: {
+        email: false,
+        password: false,
+    },
+    fomrIsValid: false,
+}
 
 const LoginScreen = ({ navigation }) => {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    // const [email, setEmail] = useState('');
+    // const [password, setPassword] = useState('');
 
     //   TODO: Login Function
-    const login = () => {
-        handleLogin(email, password)
-    }
+    // const login = () => {
+    //     handleLogin(email, password)
+    // }
+    
+    const [formState, dispatchFormState] = useReducer(reducer, initialState);
+
+    const inputChangedHandler = useCallback((inputId, inputValue) => {
+        const result = validateInput(inputId, inputValue);
+        dispatchFormState({ inputId, validationResult: result, inputValue });
+    }, [dispatchFormState])
+
+    // <View style={styles.inputrows}>
+    //                     <Text style={styles.label}>Email</Text>
+    //                     <TextInput
+    //                         style={styles.input}
+    //                         placeholder="Email"
+    //                         placeholderTextColor='#FFFFFF40'
+    //                         keyboardType='address-address'
+    //                         onChangeText={newText => setEmail(newText)}
+    //                         defaultValue={email} />
+    //                 </View>
+    //                 <View style={styles.inputrows}>
+    //                     <Text style={styles.label}>Password</Text>
+    //                     <TextInput
+    //                         style={[styles.input, styles.shadowProp]}
+    //                         placeholder="Password"
+    //                         placeholderTextColor='#FFFFFF40'
+    //                         secureTextEntry={true}
+    //                         onChangeText={newText => setPassword(newText)}
+    //                         defaultValue={password}
+    //                     />
+    //                 </View>
 
     return (
         <ScrollView style={styles.container}>
@@ -23,28 +69,28 @@ const LoginScreen = ({ navigation }) => {
             <View style={styles.body}>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Email</Text>
-                    <TextInput 
-                    style={styles.input} 
-                    placeholder="Email" 
-                    placeholderTextColor='#FFFFFF40' 
-                    keyboardType='address-address' 
-                    onChangeText={newText => setEmail(newText)} 
-                    defaultValue={email}/>
+                    <Input
+                        id='email'
+                        // style={styles.input}
+                        placeholder="Enter your email"
+                        placeholderTextColor='#FFFFFF40'
+                        errorText={formState.inputValidities["email"]}
+                        onInputChanged={inputChangedHandler} />
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Password</Text>
-                    <TextInput 
-                    style={[styles.input, styles.shadowProp]} 
-                    placeholder="Password" 
-                    placeholderTextColor='#FFFFFF40' 
-                    secureTextEntry={true} 
-                    onChangeText={newText => setPassword(newText)}
-                    defaultValue={password}
-                />
+                    <Input
+                        id='password'
+                        // style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor='#FFFFFF40'
+                        secureTextEntry={true}
+                        errorText={formState.inputValidities["password"]}
+                        onInputChanged={inputChangedHandler} />
                 </View>
             </View>
             <View style={styles.btn_container}>
-                <Pressable style={styles.btn} onPress={login}>
+                <Pressable style={styles.btn} onPress={"login"}>
                     <Text style={styles.btn_text}>Login</Text>
                 </Pressable>
             </View>

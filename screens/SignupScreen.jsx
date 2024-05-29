@@ -1,7 +1,62 @@
 import { StyleSheet, View, Text, TextInput, Pressable, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useCallback, useReducer, useState } from 'react'
+import { validateInput } from '../utils/actions/formAction';
+import { reducer } from '../utils/reducers/formReducers';
+import Input from '../components/Input';
+import { SignUp } from '../authService';
+import {useDispatch} from '@reduxjs/toolkit';
+
+const isTestMode = true;
+
+const initialState = {
+    inputValues: {
+        fullName: isTestMode ? "Christian Krahtz" : "",
+        email: isTestMode ? "example@gmail.com" : "",
+        password: isTestMode ? "**********" : "",
+    },
+    inputValidities: {
+        fullName: false,
+        email: false,
+        password: false,
+    },
+    formIsValid: false,
+}
 
 const SignupScreen = ({ navigation }) => {
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] =useState(null);
+    const [formState, dispatchFormState] = useReducer(reducer, initialState);
+    const dispatch = useDispatch();
+
+    const inputChangedHandler = useCallback((inputId, inputValue) => {
+        const result = validateInput(inputId, inputValue);
+        dispatchFormState({ inputId, validationResult: result, inputValue });
+    }, [dispatchFormState])
+
+    const authHandler = async () => {
+        try {
+            setIsLoading(true);
+            const action = SignUp(
+                formState.inputValues.fullName,
+                formState.inputValues.email,
+                formState.inputValues.password,
+            );
+
+            await dispatch(action);
+
+            Alert.alert("Account Successfully created", "Account Created")
+            setError(null);
+            setIsLoading(false);
+
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+            setError(error.message);
+        }
+
+    }
+
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Sign Up</Text>
@@ -12,19 +67,38 @@ const SignupScreen = ({ navigation }) => {
             <View style={styles.body}>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Username</Text>
-                    <TextInput style={styles.input} placeholder="Username" placeholderTextColor='#FFFFFF40' />
+                    <Input
+                        id="fullName"
+                        // style={styles.input}
+                        placeholder="Enter your username"
+                        placeholderTextColor='#FFFFFF40'
+                        errorText={formState.inputValidities["fullName"]}
+                        onInputChanged={inputChangedHandler} />
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Email</Text>
-                    <TextInput style={styles.input} placeholder="Email" placeholderTextColor='#FFFFFF40' />
+                    <Input
+                        id='email'
+                        // style={styles.input}
+                        placeholder="Enter your email"
+                        placeholderTextColor='#FFFFFF40'
+                        errorText={formState.inputValidities["email"]}
+                        onInputChanged={inputChangedHandler} />
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Password</Text>
-                    <TextInput style={[styles.input, styles.shadowProp]} placeholder="Password" placeholderTextColor='#FFFFFF40' secureTextEntry={true} />
+                    <Input
+                        id='password'
+                        // style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor='#FFFFFF40'
+                        secureTextEntry={true}
+                        errorText={formState.inputValidities["password"]}
+                        onInputChanged={inputChangedHandler} />
                 </View>
             </View>
             <View style={styles.btn_container}>
-                <Pressable style={styles.btn}>
+                <Pressable style={styles.btn} onPress={authHandler}>
                     <Text style={styles.btn_text}>Register</Text>
                 </Pressable>
             </View>
