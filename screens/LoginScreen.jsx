@@ -1,26 +1,50 @@
 import { StyleSheet, View, Text, TextInput, Pressable, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useState }  from 'react'
 
-function LoginScreen ({ navigation })  {
+import { handleLogin } from '../authService'
+
+const LoginScreen = ({ navigation }) => {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    //   TODO: Login Function
+    const login = () => {
+        handleLogin(email, password)
+    }
+
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Welcome back</Text>
             <View style={styles.sub_container}>
                 <Text style={styles.subheading}>Login to your account or </Text>
-                <Text style={styles.subheading_link}  onPress={() => navigation.navigate('Signup')}>create new account</Text>
+                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Signup')}>create new account</Text>
             </View>
             <View style={styles.body}>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Email</Text>
-                    <TextInput style={styles.input} placeholder="Email" placeholderTextColor='#FFFFFF40' />
+                    <TextInput 
+                    style={styles.input} 
+                    placeholder="Email" 
+                    placeholderTextColor='#FFFFFF40' 
+                    keyboardType='address-address' 
+                    onChangeText={newText => setEmail(newText)} 
+                    defaultValue={email}/>
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Password</Text>
-                    <TextInput style={[styles.input, styles.shadowProp]} placeholder="Password" placeholderTextColor='#FFFFFF40' secureTextEntry={true} />
+                    <TextInput 
+                    style={[styles.input, styles.shadowProp]} 
+                    placeholder="Password" 
+                    placeholderTextColor='#FFFFFF40' 
+                    secureTextEntry={true} 
+                    onChangeText={newText => setPassword(newText)}
+                    defaultValue={password}
+                />
                 </View>
             </View>
             <View style={styles.btn_container}>
-                <Pressable style={styles.btn}>
+                <Pressable style={styles.btn} onPress={login}>
                     <Text style={styles.btn_text}>Login</Text>
                 </Pressable>
             </View>

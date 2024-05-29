@@ -1,13 +1,13 @@
 import { StyleSheet, View, Text, TextInput, Pressable, ScrollView } from 'react-native'
 import React from 'react'
 
-function SignupScreen({ navigation }) {
+const SignupScreen = ({ navigation }) => {
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Sign Up</Text>
             <View style={styles.sub_container}>
-                <Text style={styles.subheading}>Create a new account or Login</Text>
-                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Login')}> here</Text>
+                <Text style={styles.subheading}>Create a new account or </Text>
+                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Login')}>Login here</Text>
             </View>
             <View style={styles.body}>
                 <View style={styles.inputrows}>
@@ -21,10 +21,6 @@ function SignupScreen({ navigation }) {
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Password</Text>
                     <TextInput style={[styles.input, styles.shadowProp]} placeholder="Password" placeholderTextColor='#FFFFFF40' secureTextEntry={true} />
-                </View>
-                <View style={styles.inputrows}>
-                    <Text style={styles.label}>Re-enter Password</Text>
-                    <TextInput style={[styles.input, styles.shadowProp]} placeholder="Re-enter Password" placeholderTextColor='#FFFFFF40' secureTextEntry={true} />
                 </View>
             </View>
             <View style={styles.btn_container}>
