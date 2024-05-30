@@ -47,7 +47,7 @@ function Competitions({ navigation }) {
                                     <Text style={styles.description}>
                                         {item.description}
                                     </Text>
-                                    <Pressable style={styles.btn} key={index}>
+                                    <Pressable style={styles.btn} key={index} data={this.item} onPress={() => navigation.navigate("Details", item)}>
                                         <Text style={styles.btn_text}>Enter</Text>
                                     </Pressable>
                                 </View>
