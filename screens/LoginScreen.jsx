@@ -58,13 +58,15 @@ const LoginScreen = ({ navigation }) => {
     //                         defaultValue={password}
     //                     />
     //                 </View>
+}
 
+function LoginScreen ({ navigation })  {
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Welcome back</Text>
             <View style={styles.sub_container}>
                 <Text style={styles.subheading}>Login to your account or </Text>
-                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Signup')}>create new account</Text>
+                <Text style={styles.subheading_link}  onPress={() => navigation.navigate('Signup')}>create new account</Text>
             </View>
             <View style={styles.body}>
                 <View style={styles.inputrows}>
