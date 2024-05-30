@@ -3,8 +3,8 @@ import React, { useCallback, useReducer, useState } from 'react'
 import { validateInput } from '../utils/actions/formAction';
 import { reducer } from '../utils/reducers/formReducers';
 import Input from '../components/Input';
-import { SignUp } from '../authService';
-import {useDispatch} from '@reduxjs/toolkit';
+import { SignUp, handleSignUp } from '../authService';
+import { useDispatch } from '@reduxjs/toolkit';
 
 const isTestMode = true;
 
@@ -22,12 +22,12 @@ const initialState = {
     formIsValid: false,
 }
 
-const SignupScreen = ({ navigation }) => {
+function SignupScreen({ navigation }) {
 
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] =useState(null);
+    const [error, setError] = useState(null);
     const [formState, dispatchFormState] = useReducer(reducer, initialState);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const inputChangedHandler = useCallback((inputId, inputValue) => {
         const result = validateInput(inputId, inputValue);
@@ -36,30 +36,26 @@ const SignupScreen = ({ navigation }) => {
 
     const authHandler = async () => {
         try {
-            setIsLoading(true);
-            const action = SignUp(
-                formState.inputValues.fullName,
+            // setIsLoading(true);
+            const action = handleSignUp(
                 formState.inputValues.email,
                 formState.inputValues.password,
             );
 
-            await dispatch(action);
+            // await dispatch(action);
 
-            Alert.alert("Account Successfully created", "Account Created")
-            setError(null);
-            setIsLoading(false);
+            // Alert.alert("Account Successfully created", "Account Created")
+            // setError(null);
+            // setIsLoading(false);
 
         } catch (error) {
             console.log(error);
-            setIsLoading(false);
-            setError(error.message);
+            // setIsLoading(false);
+            // setError(error.message);
         }
-
     }
-}
 
-function SignupScreen({ navigation }) {
-return (
+    return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Sign Up</Text>
             <View style={styles.sub_container}>
@@ -97,10 +93,6 @@ return (
                         secureTextEntry={true}
                         errorText={formState.inputValidities["password"]}
                         onInputChanged={inputChangedHandler} />
-                </View>
-                <View style={styles.inputrows}>
-                    <Text style={styles.label}>Re-enter Password</Text>
-                    <TextInput style={[styles.input, styles.shadowProp]} placeholder="Re-enter Password" placeholderTextColor='#FFFFFF40' secureTextEntry={true} />
                 </View>
             </View>
             <View style={styles.btn_container}>
