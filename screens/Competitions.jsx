@@ -1,25 +1,55 @@
-import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
-import React from 'react'
+import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, ScrollView, Button } from 'react-native'
+import React, { useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
+import { getMyCompList } from '../services/DbServices';
 
-const image = require('../assets/test_images/html-5.png')
+// const image = [
+//     require('../assets/test_images/java.png'),
+//     require('../assets/test_images/html-5.png'),
+// ]
 
 function Competitions({ navigation }) {
+
+    const [compItems, setCompItems] = useState([]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // Do something when the screen is focused
+            handleGettingOfData()
+            return () => {
+                console.log(compItems);
+                // Do something when the screen is unfocused
+                // Useful for cleanup functions
+                //DO NOTHING
+            };
+        }, [])
+    );
+
+    const handleGettingOfData = async () => {
+        var allData = await getMyCompList();
+        console.log("CompScreen Log: " + allData)
+        setCompItems(allData);
+    }
+
     return (
         <SafeAreaView style={styles.background}>
             {compItems != [] ? (
                 <View style={styles.container}>
                     <Text style={styles.header}>Competitions</Text>
                     <Text style={styles.subhead}>Select competition to compete in</Text>
+                    <Pressable style={styles.btn} onPress={() => navigation.navigate("CreateComp")}>
+                        <Text style={styles.btn_text}>Create new Competition</Text>
+                    </Pressable>
                     <ScrollView style={styles.scroll}>
                         {/* Loop through possible compititions */}
                         {compItems.map((item, index) => (
-                            <ImageBackground style={styles.card} source={image[index]} resizeMode="cover">
+                            <ImageBackground style={styles.card} resizeMode="cover">
                                 <View style={styles.shadow}>
                                     <Text style={styles.title}>{item.title}</Text>
                                     <Text style={styles.description}>
-                                        {item.description}
+                                        {item.desc}
                                     </Text>
-                                    <Pressable style={styles.btn} key={index}>
+                                    <Pressable style={styles.btn} key={index} data={this.item} onPress={() => navigation.navigate("Details", item)}>
                                         <Text style={styles.btn_text}>Enter</Text>
                                     </Pressable>
                                 </View>
@@ -51,7 +81,8 @@ const styles = StyleSheet.create({
     subhead: {
         fontSize: 14,
         fontWeight: '300',
-        color: 'white'
+        color: 'white',
+        marginBottom: 15
     },
     scroll: {
         paddingTop: 24,
@@ -65,7 +96,8 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#212B5B',
         borderRadius: 10,
-        // padding: 15
+        // padding: 15,
+        marginBottom: 15
     },
     title: {
         fontSize: 20,
