@@ -1,37 +1,9 @@
 import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, ScrollView } from 'react-native'
-import React, { useState } from 'react'
-import { useFocusEffect } from '@react-navigation/native';
-import { getMyCompList } from '../services/DbServices';
+import React from 'react'
 
-const image = [
-    require('../assets/test_images/java.png'),
-    require('../assets/test_images/html-5.png'),
-]
+const image = require('../assets/test_images/html-5.png')
 
 function Competitions({ navigation }) {
-
-    const [compItems, setCompItems] = useState([]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            // Do something when the screen is focused
-            handleGettingOfData()
-            return () => {
-                console.log(compItems);
-                // Do something when the screen is unfocused
-                // Useful for cleanup functions
-                //DO NOTHING
-            };
-        }, [])
-    );
-
-    const handleGettingOfData = async () => {
-        var allData = await getMyCompList();
-        console.log("CompScreen Log: " + allData)
-        setCompItems(allData);
-    }
-
-
     return (
         <SafeAreaView style={styles.background}>
             {compItems != [] ? (
@@ -47,7 +19,7 @@ function Competitions({ navigation }) {
                                     <Text style={styles.description}>
                                         {item.description}
                                     </Text>
-                                    <Pressable style={styles.btn} key={index} data={this.item} onPress={() => navigation.navigate("Details", item)}>
+                                    <Pressable style={styles.btn} key={index}>
                                         <Text style={styles.btn_text}>Enter</Text>
                                     </Pressable>
                                 </View>
@@ -59,6 +31,7 @@ function Competitions({ navigation }) {
                 <Text>No Competitions Found</Text>
             )}
         </SafeAreaView>
+
     )
 }
 
@@ -92,7 +65,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#212B5B',
         borderRadius: 10,
-        marginVertical: 15
+        // padding: 15
     },
     title: {
         fontSize: 20,

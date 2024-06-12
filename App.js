@@ -9,8 +9,11 @@ import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './navigation/Navigation';
+import { getFirebaseApp } from './firebase';
+import { getAuth } from 'firebase/auth';
 
-const Stack = createNativeStackNavigator();
+const app = getFirebaseApp();
+const auth = getAuth(app);
 
 export default function App() {
   return (
