@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 // auth
-import { getFirebaseApp } from '../firebase';
+import { auth, getFirebaseApp } from '../firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 // Screens
 import SignupScreen from '../screens/SignupScreen';
@@ -16,8 +16,8 @@ import CompetitionsScreen from '../screens/Competitions';
 import SingleComp from '../screens/SingleComp';
 import CreateCompetitionScreen from '../screens/CreateCompetitionScreen';
 
-const app = getFirebaseApp();
-const auth = getAuth(app);
+// const app = getFirebaseApp();
+// const auth = getAuth(app);
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

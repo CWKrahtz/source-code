@@ -1,4 +1,4 @@
-import { getFirebaseApp } from "./firebase";
+import { auth, getFirebaseApp } from "./firebase";
 import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 // import { auth } from "./firebase";
 import { child, getDatabase, set, ref } from 'firebase/database';
@@ -71,8 +71,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 //original code
 export const handleLogin = (email, password) => {
     console.log(email + " " + password)
-    const app = getFirebaseApp();
-    const auth = getAuth(app);
+    // const app = getFirebaseApp();
+    // const auth = getAuth(app);
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Signed in 
@@ -90,8 +90,8 @@ export const handleLogin = (email, password) => {
 //Create user (SignUp)
 
 export const handleSignUp = (email, password) => {
-    const app = getFirebaseApp();
-    const auth = getAuth(app);
+    // const app = getFirebaseApp();
+    // const auth = getAuth(app);
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -107,8 +107,8 @@ export const handleSignUp = (email, password) => {
 
 //Sign user Out
 export const handleSignOut = () =>{
-    const app = getFirebaseApp();
-    const auth = getAuth(app);
+    // const app = getFirebaseApp();
+    // const auth = getAuth(app);
     signOut(auth).then((userCredit) => {
         const user = userCredit.user
         console.log("Signing out: " + user.email)

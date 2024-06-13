@@ -1,14 +1,15 @@
 import { View, Text, TextInput, Button, StyleSheet, Pressable, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getFirebaseApp } from '../firebase'; // Make sure this file correctly initializes your Firebase app
+import { auth, db, getFirebaseApp } from '../firebase'; // Make sure this file correctly initializes your Firebase app
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Import necessary Firestore functions
 import Input from '../components/Input';
+import { initializeApp } from 'firebase/app';
 
-const app = getFirebaseApp();
-const auth = getAuth(app);
-const db = getFirestore(app); // Initialize Firestore
+// const app = initializeApp();
+// const auth = getAuth(app);
+// const db = getFirestore(app); // Initialize Firestore
 
 function CreateCompetitionScreen ({ navigation }) {
     const [title, setTitle] = useState('');
@@ -32,8 +33,8 @@ function CreateCompetitionScreen ({ navigation }) {
         };
 
         try {
-            await addDoc(collection(db, 'competitions'), competition); // Add competition to Firestore
-            alert('Competition created successfully!');
+            const docRef = await addDoc(collection(db, 'competitions'), competition); // Add competition to Firestore
+            alert('Competition created successfully!', docRef);
             navigation.goBack(); // Go back to the previous screen
         } catch (error) {
             console.error('Error creating competition: ', error);

@@ -12,8 +12,8 @@ import Navigation from './navigation/Navigation';
 import { getFirebaseApp } from './firebase';
 import { getAuth } from 'firebase/auth';
 
-const app = getFirebaseApp();
-const auth = getAuth(app);
+// const app = getFirebaseApp();
+// const auth = getAuth(app);
 
 export default function App() {
   return (

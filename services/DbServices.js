@@ -1,10 +1,10 @@
 //All of our Firestore functionality
-import { collection, getDocs, addDoc, query, orderBy, where, getFirestore } from "firebase/firestore";
-import { getFirebaseApp } from "../firebase";
+import { collection, getDocs, addDoc, query, orderBy, where, getFirestore, Firestore } from "firebase/firestore";
+import { auth } from "../firebase";
 // import { db } from "../firebase";
 
 //comment out and in to make work 
-const db = getFirestore(getFirebaseApp);
+const db = getFirestore(Firestore)
 
 //GET ALL COMPATITIONS
 //TODO: Get all list item function
