@@ -31,10 +31,11 @@ function CreateCompetitionScreen ({ navigation }) {
             isCompleted: false,
             timestamp
         };
-
+        console.log("Logging compititions", competition)
         try {
-            const docRef = await addDoc(collection(db, 'competitions'), competition); // Add competition to Firestore
-            alert('Competition created successfully!', docRef);
+            console.log("Logging compititions", JSON.stringify(competition))
+            await addDoc(collection(db, 'competitions'), competition); // Add competition to Firestore
+            alert('Competition created successfully!');
             navigation.goBack(); // Go back to the previous screen
         } catch (error) {
             console.error('Error creating competition: ', error);
@@ -70,28 +71,28 @@ function CreateCompetitionScreen ({ navigation }) {
                 <Text style={styles.label}>Answer One</Text>
                 <Input
                     placeholder="Option 1"
-                    onInputChanged={setOption1}
+                    onChangeText={setOption1}
                     value={option1}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Answer Two</Text>
                 <Input
                     placeholder="Option 2"
-                    onInputChanged={setOption2}
+                    onChangeText={setOption2}
                     value={option2}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Answer Three</Text>
                 <Input
                     placeholder="Option 3"
-                    onInputChanged={setOption3}
+                    onChangeText={setOption3}
                     value={option3}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Correct Answer</Text>
                 <Input
                     placeholder="Answer"
-                    onInputChanged={setAnswer}
+                    onChangeText={setAnswer}
                     value={answer}
                     style={styles.input}
                 />

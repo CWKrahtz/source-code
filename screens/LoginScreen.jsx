@@ -73,9 +73,9 @@ function LoginScreen({ navigation }) {
     const [password, setPassword] = useState('');
 
     const login = () => {
-        setEmail(formState.inputValues.email);
-        setPassword(formState.inputValues.password);
-        handleLogin(email, password);
+        // setEmail(formState.inputValues.email); <--took to long to set the values before calling login
+        // setPassword(formState.inputValues.password);
+        handleLogin(formState.inputValues.email, formState.inputValues.password);
     }
 
     return (

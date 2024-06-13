@@ -1,5 +1,5 @@
-import { auth, getFirebaseApp } from "./firebase";
-import { getAuth, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase";
+import {  signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 // import { auth } from "./firebase";
 import { child, getDatabase, set, ref } from 'firebase/database';
 import AsyncStorage from "@react-native-async-storage/async-storage";

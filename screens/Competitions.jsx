@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, Scrol
 import React, { useState } from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import { getMyCompList } from '../services/DbServices';
+import { auth } from '../firebase';
 
 // const image = [
 //     require('../assets/test_images/java.png'),
@@ -28,6 +29,7 @@ function Competitions({ navigation }) {
     const handleGettingOfData = async () => {
         var allData = await getMyCompList();
         console.log("CompScreen Log: " + allData)
+        console.log("Auth Log: " + JSON.stringify(auth.currentUser))
         setCompItems(allData);
     }
 
@@ -43,7 +45,7 @@ function Competitions({ navigation }) {
                     <ScrollView style={styles.scroll}>
                         {/* Loop through possible compititions */}
                         {compItems.map((item, index) => (
-                            <ImageBackground style={styles.card} resizeMode="cover">
+                            <ImageBackground style={styles.card} resizeMode="cover" key={index}>
                                 <View style={styles.shadow}>
                                     <Text style={styles.title}>{item.title}</Text>
                                     <Text style={styles.description}>

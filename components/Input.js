@@ -7,7 +7,13 @@ const Input = (props) => {
     const { colors, light } = useTheme();
 
     const onChangeText = (text) => {
-        props.onInputChanged(props.id, text)
+        console.log("input change ..." + text + ' ' + props.id)
+        if(props.id){
+            props.onInputChanged(props.id, text)
+        } else {
+            props.onInputChanged(text)
+        }
+        
     }
 
     return (
