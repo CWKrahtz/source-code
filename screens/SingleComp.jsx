@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Pressable, Alert } from 'react-native';
-import { auth } from '../firebase'; // Replace with your Firebase authentication hook or context
-import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase'; // Ensure you have initialized and exported your Firestore instance
+import { auth, db } from '../firebase'; // Replace with your Firebase imports
+import { addDoc, collection, doc, serverTimestamp, updateDoc, getDoc } from 'firebase/firestore';
 
 const SingleComp = ({ route, navigation }) => {
-    const user = auth; // Custom hook to get current user, replace as per your implementation
+    const user = auth.currentUser; // Get current user, replace as per your implementation
     const [selectedOption, setSelectedOption] = useState(null);
     const [isSelected, setIsSelected] = useState(false);
     const [selectionTime, setSelectionTime] = useState(null);
 
-    const items = route.params.item;
-    console.log("Current User", user.currentUser.email)
+    const { item } = route.params;
+    const competitionId = item.id;
+
+    console.log("User id: ", user.uid)
+    console.log("Comp id: ", competitionId)
 
     const handleOptionPress = (option) => {
         if (!isSelected) {
@@ -26,9 +28,10 @@ const SingleComp = ({ route, navigation }) => {
             return styles.btn;
         }
         return selectedOption === option
-            ? option === items.answer ? styles.correct : styles.incorrect
+            ? option === item.answer ? styles.correct : styles.incorrect
             : styles.incorrect;
     };
+
 
     const handleFinishCompetition = async () => {
         if (!isSelected) {
@@ -37,55 +40,60 @@ const SingleComp = ({ route, navigation }) => {
         }
 
         try {
-            const userDocRef = doc(db, 'users', user.uid); // Assuming 'users' is your collection of users
-            const userSnapshot = await userDocRef.get();
+            // Ensure the user is authenticated
+            if (!user) {
+                throw new Error('User not authenticated.');
+            }
+
+            const userDocRef = doc(db, 'users', user.uid); // Reference to user document
+            const userSnapshot = await getDoc(userDocRef); // Use getDoc to fetch the document
+
             if (!userSnapshot.exists()) {
-                throw new Error('User document does not exist.');
+                throw new Error('User document not found.');
             }
 
             const userData = userSnapshot.data();
-            const { completedCompetitions } = userData;
+            const { completedCompetitions = [] } = userData; // Ensure it's always an array
 
-            if (!completedCompetitions || !Array.isArray(completedCompetitions)) {
-                throw new Error('Invalid data structure for completed competitions.');
-            }
-
-            if (completedCompetitions.includes(items.id)) {
+            if (completedCompetitions.includes(competitionId)) {
                 Alert.alert('You have already completed this competition.');
                 return;
             }
 
             // Update user document to mark competition as completed
             await updateDoc(userDocRef, {
-                completedCompetitions: [...completedCompetitions, items.id]
+                completedCompetitions: [...completedCompetitions, competitionId]
             });
 
-            // Create a subcollection under the user document to store completion details
-            const userCompetitionRef = collection(userDocRef, 'completedCompetitions');
-            await addDoc(userCompetitionRef, {
-                competitionId: items.id,
-                selectedOption,
-                isCorrect: selectedOption === items.answer,
+            // Reference to competition document
+            const competitionDocRef = doc(db, 'competitions', competitionId);
+
+            // Subcollection reference for storing completion timestamps
+            const completionTimestampsRef = collection(competitionDocRef, 'completedTimestamps');
+
+            // Add completion timestamp to subcollection
+            await addDoc(completionTimestampsRef, {
+                userId: user.uid,
                 timestamp: serverTimestamp()
             });
 
             Alert.alert('Competition completed successfully!');
             navigation.goBack();
         } catch (error) {
-            console.error('Error completing competition: ', error);
+            console.error('Error completing competition:', error.message);
             Alert.alert('Failed to complete competition.');
         }
     };
 
     return (
         <SafeAreaView style={styles.background}>
-            {!items.isCompleted ? (
+            {!item.isCompleted ? (
                 <View style={styles.container}>
-                    <Text style={styles.header}>{items.title}</Text>
-                    <Text style={styles.subhead}>{items.description}</Text>
-                    <Text style={styles.question}>{items.question}</Text>
+                    <Text style={styles.header}>{item.title}</Text>
+                    <Text style={styles.subhead}>{item.description}</Text>
+                    <Text style={styles.question}>{item.question}</Text>
 
-                    {items.options.map((option, index) => (
+                    {item.options.map((option, index) => (
                         <Pressable
                             key={index}
                             style={getButtonStyle(option)}
@@ -98,7 +106,7 @@ const SingleComp = ({ route, navigation }) => {
 
                     {isSelected && (
                         <Text style={styles.resultText}>
-                            {selectedOption === items.answer ? 'Correct!' : 'Incorrect!'} 
+                            {selectedOption === item.answer ? 'Correct!' : 'Incorrect!'}
                             {'\n'}
                             Selected at: {selectionTime}
                         </Text>

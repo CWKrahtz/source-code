@@ -36,7 +36,7 @@ function Competitions({ navigation }) {
                 {
                     text: 'OK',
                     onPress: () => {
-                        navigation.navigate('Leaderboard');
+                        navigation.navigate('Leaderboard', {item});
                     }
                 }
             ]);

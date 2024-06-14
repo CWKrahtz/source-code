@@ -2,7 +2,7 @@ import { auth, db } from "./firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, set } from 'firebase/database';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, doc, setDoc } from "firebase/firestore";
 
 // Function to create a user entry in Firestore (not used directly in this example)
 const createUserInFirestore = async (fullName, email, userId) => {
@@ -61,7 +61,7 @@ export const handleSignUp = async (email, password, fullName) => {
     try {
         // Save user data to Realtime Database
         // await set(ref(db, `users/${user.uid}`), userData);
-        await addDoc(collection(db, 'users'), userData);
+        await setDoc(doc(db, 'users', userData.id), userData);
 
         return user; // Return the user object if needed
     } catch (error) {
