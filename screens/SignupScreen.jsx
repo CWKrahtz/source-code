@@ -1,10 +1,9 @@
-import { StyleSheet, View, Text, TextInput, Pressable, ScrollView } from 'react-native'
-import React, { useCallback, useReducer, useState } from 'react'
+import { StyleSheet, View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
+import React, { useCallback, useReducer, useState } from 'react';
 import { validateInput } from '../utils/actions/formAction';
 import { reducer } from '../utils/reducers/formReducers';
 import Input from '../components/Input';
-import { SignUp, handleSignUp } from '../authService';
-import { useDispatch } from '@reduxjs/toolkit';
+import { handleSignUp } from '../authService'; // Ensure correct import
 
 const isTestMode = true;
 
@@ -20,79 +19,80 @@ const initialState = {
         password: false,
     },
     formIsValid: false,
-}
+};
 
 function SignupScreen({ navigation }) {
-
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [formState, dispatchFormState] = useReducer(reducer, initialState);
-    // const dispatch = useDispatch();
 
     const inputChangedHandler = useCallback((inputId, inputValue) => {
         const result = validateInput(inputId, inputValue);
-        dispatchFormState({ inputId, validationResult: result, inputValue });
-    }, [dispatchFormState])
+        dispatchFormState({ type: 'UPDATE_INPUT', inputId, validationResult: result, inputValue });
+    }, []);
 
     const authHandler = async () => {
         try {
-            // setIsLoading(true);
-            const action = handleSignUp(
+            setIsLoading(true);
+
+            // Call handleSignUp with email, password, and fullName (optional)
+            await handleSignUp(
                 formState.inputValues.email,
                 formState.inputValues.password,
+                formState.inputValues.fullName // Add fullName if needed
             );
 
-            // await dispatch(action);
-
-            // Alert.alert("Account Successfully created", "Account Created")
-            // setError(null);
-            // setIsLoading(false);
+            setIsLoading(false);
+            Alert.alert("Account Successfully created", "Account Created");
+            navigation.navigate('Login'); // Navigate to login screen after successful registration
 
         } catch (error) {
-            console.log(error);
-            // setIsLoading(false);
-            // setError(error.message);
+            console.error('Error during sign up:', error.message);
+            setIsLoading(false);
+            Alert.alert('Error during sign up. Please try again.');
         }
-    }
+    };
 
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Sign Up</Text>
             <View style={styles.sub_container}>
                 <Text style={styles.subheading}>Create a new account or Login</Text>
-                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Login')}> here</Text>
+                <Text style={styles.subheading_link} onPress={() => navigation.navigate('Login')}>
+                    {' '}
+                    here
+                </Text>
             </View>
             <View style={styles.body}>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Username</Text>
                     <Input
                         id="fullName"
-                        // style={styles.input}
                         placeholder="Enter your username"
-                        placeholderTextColor='#FFFFFF40'
-                        errorText={formState.inputValidities["fullName"]}
-                        onInputChanged={inputChangedHandler} />
+                        placeholderTextColor="#FFFFFF40"
+                        errorText={!formState.inputValidities.fullName}
+                        onInputChanged={inputChangedHandler}
+                    />
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Email</Text>
                     <Input
-                        id='email'
-                        // style={styles.input}
+                        id="email"
                         placeholder="Enter your email"
-                        placeholderTextColor='#FFFFFF40'
-                        errorText={formState.inputValidities["email"]}
-                        onInputChanged={inputChangedHandler} />
+                        placeholderTextColor="#FFFFFF40"
+                        errorText={!formState.inputValidities.email}
+                        onInputChanged={inputChangedHandler}
+                    />
                 </View>
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Password</Text>
                     <Input
-                        id='password'
-                        // style={styles.input}
+                        id="password"
                         placeholder="Enter your password"
-                        placeholderTextColor='#FFFFFF40'
+                        placeholderTextColor="#FFFFFF40"
                         secureTextEntry={true}
-                        errorText={formState.inputValidities["password"]}
-                        onInputChanged={inputChangedHandler} />
+                        errorText={!formState.inputValidities.password}
+                        onInputChanged={inputChangedHandler}
+                    />
                 </View>
             </View>
             <View style={styles.btn_container}>
@@ -101,12 +101,11 @@ function SignupScreen({ navigation }) {
                 </Pressable>
             </View>
         </ScrollView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-        // backgroundColor: 'grey',
         paddingLeft: 24,
         paddingRight: 24,
         paddingBottom: 24,
@@ -118,27 +117,27 @@ const styles = StyleSheet.create({
         paddingLeft: 24,
         paddingRight: 24,
         paddingBottom: 24,
-        borderRadius: 10
+        borderRadius: 10,
     },
     heading: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 40
+        fontSize: 40,
     },
     sub_container: {
         display: 'flex',
         flexDirection: 'row',
-        marginBottom: 24
+        marginBottom: 24,
     },
     subheading: {
         color: 'white',
         fontSize: 14,
-        fontWeight: '200'
+        fontWeight: '200',
     },
     subheading_link: {
         color: '#6573B6',
-        textDecorationLine: true,
-        fontWeight: 'bold'
+        textDecorationLine: 'underline',
+        fontWeight: 'bold',
     },
     inputrows: {
         marginTop: 24,
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
     label: {
         color: 'white',
         fontSize: 14,
-        fontWeight: '200'
+        fontWeight: '200',
     },
     input: {
         width: '100%',
@@ -158,36 +157,24 @@ const styles = StyleSheet.create({
         color: 'white',
         marginTop: 10,
     },
-    shadowProp: {
-        // shadowColor: '#FFFFFF',
-        // shadowOffset: {width: 0, height: 5},
-        // shadowOpacity: 0.5,
-        // shadowRadius: 4,
-    },
     btn_container: {
         alignItems: 'center',
         justifyContent: 'flex-end',
-        display: 'flex',
         height: 150,
-        // backgroundColor: 'white',
     },
     btn: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 24,
-        // paddingHorizontal: 50,
         borderRadius: 10,
         backgroundColor: '#19256F',
         width: '60%',
     },
     btn_text: {
         fontSize: 16,
-        lineHeight: 21,
         fontWeight: 'bold',
-        letterSpacing: 0.25,
         color: 'white',
-    }
-
+    },
 });
 
-export default SignupScreen
+export default SignupScreen;

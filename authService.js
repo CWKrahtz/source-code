@@ -1,118 +1,82 @@
-import { auth } from "./firebase";
-import {  signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-// import { auth } from "./firebase";
-import { child, getDatabase, set, ref } from 'firebase/database';
+import { auth, db } from "./firebase";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { ref, set } from 'firebase/database';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { authenticate } from "./store/authSlice";
+import { addDoc, collection } from "firebase/firestore";
 
-//SignUp - video code
-// export const SignUp = (fullName, email, password) => {
-//     return async (dispatch) => {
-//         const app = getFirebaseApp();
-//         const auth = getAuth(app);
+// Function to create a user entry in Firestore (not used directly in this example)
+const createUserInFirestore = async (fullName, email, userId) => {
+    const userData = {
+        fullName,
+        email,
+        userId,
+        signUpDate: new Date().toString(),
+    };
 
-//         try {
-//             const result = await createUserWithEmailAndPassword(auth, email, password);
+    const dbRef = ref(getDatabase());
+    await set(ref(dbRef, `users/${userId}`), userData);
+    return userData;
+};
 
-//             const { uid, stsTokenManager } = result.user;
-//             const { accessToken, expirationTime } = stsTokenManager;
-//             const expiryDate = new Date(expirationTime);
+// Function to save user data and token to AsyncStorage
+const saveToDataStorage = (token, userId, expiryDate) => {
+    AsyncStorage.setItem(
+        'userData',
+        JSON.stringify({
+            token,
+            userId,
+            expireDate: expiryDate.toISOString(),
+        })
+    );
+};
 
-//             const userData = await createUser(fullName, email, uid);
-
-//             dispatch(authenticate({ token: accessToken, userData }));
-
-//             //Save user data and token to storage
-//             saveToDataStorage(accessToken, uid, expiryDate)
-
-//         } catch (error) {
-
-//             console.log(error);
-
-//             const errorCode = error.code;
-//             let message = "Something went wrong (authServices.js)"
-            
-//             if (errorCode === "auth/wrong-password" || errorCode === "auth/user-not-found") {
-//                 message = "wrong email or password"
-//             }
-
-//             throw new Error(message);
-            
-//         }
-//     }
-// }
-
-// const createUser =async (fullName, email, userId) => {
-//     const userData = {
-//         fullName,
-//         email,
-//         userId,
-//         signUpDate: new Date().toString(),
-//     }
-
-//     const dbRef = ref(getDatabase());
-//     const childRef = child(dbRef, `user/${userId}`)
-//     await set(childRef, userData);
-//     return userData;
-// };
-
-// const saveToDataStorage = ( token, userId, expiryDate ) => {
-//     AsyncStorage.setItem(
-//         'userData',
-//         JSON.stringify({
-//             token,
-//             userId,
-//             expireDate: expiryDate.toISOString(),
-//         })
-//     )
-// }
-
-// Create Firebase Auth Functionality
-//original code
+// Function to handle user login
 export const handleLogin = (email, password) => {
-    console.log(email + " " + password)
-    // const app = getFirebaseApp();
-    // const auth = getAuth(app);
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // Signed in 
+            // Signed in successfully
             const user = userCredential.user;
-            console.log("Logged in user - " + user.email);
-            // ...
+            console.log("Logged in user:", user.email);
+            // Handle further actions upon successful login
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorMessage);
+            console.error(errorMessage);
         });
-}
+};
 
-//Create user (SignUp)
+// Function to handle user sign-up
+export const handleSignUp = async (email, password, fullName) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-export const handleSignUp = (email, password) => {
-    // const app = getFirebaseApp();
-    // const auth = getAuth(app);
+    const userData = {
+        id: user.uid,
+        fullName: fullName,
+        email: email,
+        signUpDate: new Date().toString(),
+    };
 
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        const user = userCredential.user
-        console.log("User Created " + user.email)
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-    })
+    try {
+        // Save user data to Realtime Database
+        // await set(ref(db, `users/${user.uid}`), userData);
+        await addDoc(collection(db, 'users'), userData);
 
-    
-}
+        return user; // Return the user object if needed
+    } catch (error) {
+        throw error;
+    }
+};
 
-//Sign user Out
-export const handleSignOut = () =>{
-    // const app = getFirebaseApp();
-    // const auth = getAuth(app);
-    signOut(auth).then((userCredit) => {
-        const user = userCredit.user
-        console.log("Signing out: " + user.email)
-    })
-}
+// Function to handle user sign-out
+export const handleSignOut = () => {
+    signOut(auth)
+        .then(() => {
+            console.log("User signed out");
+            // Handle further actions upon successful sign-out
+        })
+        .catch((error) => {
+            console.error("Sign-out error:", error);
+        });
+};

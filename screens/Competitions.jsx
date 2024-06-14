@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
     },
     scroll: {
         flex: 1,
+        paddingVertical: 10
     },
     shadow: {
         backgroundColor: '#212B5B80',
