@@ -1,5 +1,5 @@
 //All of our Firestore functionality
-import { collection, getDocs, addDoc, query, orderBy, where, getFirestore, Firestore } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, orderBy, where, getFirestore, Firestore, doc, getDoc } from "firebase/firestore";
 import { auth } from "../firebase";
 // import { db } from "../firebase";
 
@@ -31,3 +31,31 @@ export const getMyCompList = async () => {
 
     //cant just use query snapshot as the array of items - need  to access .data()
 }
+
+export const getMyProfile = async () => {
+    console.log("getMyProfile: function enter");
+
+    try {
+        const user = auth.currentUser;
+        if (user) {
+            const uid = user.uid;
+            const userRef = doc(db, "users", uid);
+            const userDoc = await getDoc(userRef);
+
+            if (userDoc.exists()) {
+                const profileData = userDoc.data();
+                console.log("Profile", profileData);
+                return profileData;
+            } else {
+                console.log("No such document!");
+                return null;
+            }
+        } else {
+            console.log("No user logged in");
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+        return null;
+    }
+};

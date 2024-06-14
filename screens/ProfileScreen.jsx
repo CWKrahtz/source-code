@@ -1,8 +1,27 @@
 import { StyleSheet, Text, View, Button, SafeAreaView, Pressable } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { handleSignOut } from '../authService'
+import { getMyProfile } from '../services/DbServices';
+import { useFocusEffect } from '@react-navigation/native';
 
 function ProfileScreen({ navigation }) {
+
+    const [profile, setProfile] = useState();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            handleGettingProfile();
+            return () => {
+                console.log("Profile Data", profile);
+            };
+        }, [])
+    );
+
+    const handleGettingProfile = async () => {
+        var profileData = await getMyProfile();
+        console.log("Profile Log", profileData)
+        setProfile(profileData)
+    }
 
     // TODO: handle logout
     const handleLogout = () => {
@@ -14,9 +33,10 @@ function ProfileScreen({ navigation }) {
             <View style={{ padding: 20 }}>
                 <Text style={styles.header}>Profile</Text>
                 <Text style={styles.subhead}>your personal detail</Text>
+
                 {/* TODO: Show logged in user info */}
-                <Text>Email here</Text>
-                <Text>Username here</Text>
+                <Text style={styles.text}>{profile.fullName}</Text>
+                <Text style={styles.text}>{profile.email}</Text>
 
                 <View style={styles.btn_container}>
                     <Pressable style={styles.btn} onPress={handleLogout}>
@@ -44,7 +64,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000032',
     },
     btn_container: {
-        height: '80%',
+        height: '75%',
         alignItems: 'center',
         justifyContent: 'flex-end',
         display: 'flex',
@@ -64,6 +84,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
+    },
+    text: {
+        color: 'white',
+        fontSize: 40
     }
 
 });
