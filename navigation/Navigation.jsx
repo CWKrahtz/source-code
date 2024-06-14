@@ -15,6 +15,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CompetitionsScreen from '../screens/Competitions';
 import SingleComp from '../screens/SingleComp';
 import CreateCompetitionScreen from '../screens/CreateCompetitionScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 // const app = getFirebaseApp();
 // const auth = getAuth(app);
@@ -97,6 +98,13 @@ const Navigation = () => {
           <Stack.Screen 
           name="CreateComp"
           component={CreateCompetitionScreen}
+          options={{
+            headerShown: false,
+          }}
+          />
+          <Stack.Screen 
+          name="Leaderboard"
+          component={LeaderboardScreen}
           options={{
             headerShown: false,
           }}

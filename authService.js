@@ -103,6 +103,8 @@ export const handleSignUp = (email, password) => {
         const errorMessage = error.message;
         console.log(errorMessage);
     })
+
+    
 }
 
 //Sign user Out

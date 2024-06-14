@@ -1,41 +1,55 @@
-import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, ScrollView, Button } from 'react-native'
-import React, { useState } from 'react'
+import { StyleSheet, View, Text, SafeAreaView, Pressable, ImageBackground, ScrollView, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { getMyCompList } from '../services/DbServices';
 import { auth } from '../firebase';
 
-// const image = [
-//     require('../assets/test_images/java.png'),
-//     require('../assets/test_images/html-5.png'),
-// ]
-
 function Competitions({ navigation }) {
 
     const [compItems, setCompItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useFocusEffect(
         React.useCallback(() => {
-            // Do something when the screen is focused
-            handleGettingOfData()
+            handleGettingOfData();
             return () => {
                 console.log(compItems);
-                // Do something when the screen is unfocused
-                // Useful for cleanup functions
-                //DO NOTHING
             };
         }, [])
     );
 
     const handleGettingOfData = async () => {
+        setIsLoading(true);
         var allData = await getMyCompList();
-        console.log("CompScreen Log: " + allData)
-        console.log("Auth Log: " + JSON.stringify(auth.currentUser))
-        setCompItems(allData);
-    }
+        console.log("CompScreen Log: " + allData);
+        console.log("Auth Log: " + JSON.stringify(auth.currentUser));
+        setCompItems(allData || []);  // Ensure compItems is an array
+        setIsLoading(false);
+    };
+
+    const handleCompetitionPress = (item) => {
+        const endTime = new Date(item.endTime);
+        const now = new Date();
+
+        if (now >= endTime) {
+            Alert.alert('Competition Ended', 'The competition has ended!', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        navigation.navigate('Leaderboard');
+                    }
+                }
+            ]);
+        } else {
+            navigation.navigate('Details', { item });
+        }
+    };
 
     return (
         <SafeAreaView style={styles.background}>
-            {compItems != [] ? (
+            {isLoading ? (
+                <Text style={styles.loadingText}>Loading...</Text>
+            ) : (
                 <View style={styles.container}>
                     <Text style={styles.header}>Competitions</Text>
                     <Text style={styles.subhead}>Select competition to compete in</Text>
@@ -43,28 +57,29 @@ function Competitions({ navigation }) {
                         <Text style={styles.btn_text}>Create new Competition</Text>
                     </Pressable>
                     <ScrollView style={styles.scroll}>
-                        {/* Loop through possible compititions */}
-                        {compItems.map((item, index) => (
-                            <ImageBackground style={styles.card} resizeMode="cover" key={index}>
-                                <View style={styles.shadow}>
-                                    <Text style={styles.title}>{item.title}</Text>
-                                    <Text style={styles.description}>
-                                        {item.desc}
-                                    </Text>
-                                    <Pressable style={styles.btn} key={index} data={this.item} onPress={() => navigation.navigate("Details", item)}>
-                                        <Text style={styles.btn_text}>Enter</Text>
-                                    </Pressable>
-                                </View>
-                            </ImageBackground>
-                        ))}
+                        {compItems && compItems.length > 0 ? (
+                            compItems.map((item, index) => (
+                                <ImageBackground style={styles.card} resizeMode="cover" key={index}>
+                                    <View style={styles.shadow}>
+                                        <Text style={styles.title}>{item.title}</Text>
+                                        <Text style={styles.description}>{item.desc}</Text>
+                                        <Pressable
+                                            style={styles.btn}
+                                            onPress={() => handleCompetitionPress(item)}
+                                        >
+                                            <Text style={styles.btn_text}>Enter</Text>
+                                        </Pressable>
+                                    </View>
+                                </ImageBackground>
+                            ))
+                        ) : (
+                            <Text style={styles.noCompText}>No Competitions Found</Text>
+                        )}
                     </ScrollView>
                 </View>
-            ) : (
-                <Text>No Competitions Found</Text>
             )}
         </SafeAreaView>
-
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -73,6 +88,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000032',
     },
     container: {
+        flex: 1,
         padding: 24,
     },
     header: {
@@ -87,8 +103,7 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     scroll: {
-        paddingTop: 24,
-        height: '100%'
+        flex: 1,
     },
     shadow: {
         backgroundColor: '#212B5B80',
@@ -98,7 +113,6 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: '#212B5B',
         borderRadius: 10,
-        // padding: 15,
         marginBottom: 15
     },
     title: {
@@ -111,30 +125,29 @@ const styles = StyleSheet.create({
         color: 'white',
         paddingVertical: 20
     },
-
-    btn_container: {
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        display: 'flex',
-    },
     btn: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 10,
-        // paddingHorizontal: 50,
         borderRadius: 10,
         backgroundColor: '#2D4095',
         width: '100%',
     },
     btn_text: {
         fontSize: 12,
-        // lineHeight: 21,
         fontWeight: 'bold',
-        // letterSpacing: 0.25,
         color: 'white',
+    },
+    loadingText: {
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 20,
+    },
+    noCompText: {
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 20,
     }
-
 });
 
-
-export default Competitions
+export default Competitions;

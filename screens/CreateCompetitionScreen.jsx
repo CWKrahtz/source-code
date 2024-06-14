@@ -1,17 +1,11 @@
-import { View, Text, TextInput, Button, StyleSheet, Pressable, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { auth, db, getFirebaseApp } from '../firebase'; // Make sure this file correctly initializes your Firebase app
-import { getAuth } from 'firebase/auth';
-import { getFirestore, collection, addDoc } from 'firebase/firestore'; // Import necessary Firestore functions
+import { View, Text, StyleSheet, SafeAreaView, Pressable, ScrollView, Modal, Button } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Input from '../components/Input';
-import { initializeApp } from 'firebase/app';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase'; // Assuming db is correctly initialized
 
-// const app = initializeApp();
-// const auth = getAuth(app);
-// const db = getFirestore(app); // Initialize Firestore
-
-function CreateCompetitionScreen ({ navigation }) {
+const CreateCompetitionScreen = ({ navigation }) => {
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
     const [question, setQuestion] = useState('');
@@ -19,6 +13,10 @@ function CreateCompetitionScreen ({ navigation }) {
     const [option2, setOption2] = useState('');
     const [option3, setOption3] = useState('');
     const [answer, setAnswer] = useState('');
+    const [endTime, setEndTime] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
 
     const handleCreateCompetition = async () => {
         const timestamp = new Date().toLocaleString();
@@ -29,18 +27,32 @@ function CreateCompetitionScreen ({ navigation }) {
             options: [option1, option2, option3],
             answer,
             isCompleted: false,
-            timestamp
+            timestamp,
+            endTime: selectedDateTime // Use selectedDateTime here
         };
-        console.log("Logging compititions", competition)
+
         try {
-            console.log("Logging compititions", JSON.stringify(competition))
-            await addDoc(collection(db, 'competitions'), competition); // Add competition to Firestore
+            await addDoc(collection(db, 'competitions'), competition);
             alert('Competition created successfully!');
-            navigation.goBack(); // Go back to the previous screen
+            navigation.goBack();
         } catch (error) {
             console.error('Error creating competition: ', error);
             alert('Error creating competition');
         }
+    };
+
+    const handleDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || endTime;
+        setShowDatePicker(false);
+        setEndTime(currentDate);
+        setSelectedDateTime(currentDate.toISOString());
+    };
+
+    const handleTimeChange = (event, selectedTime) => {
+        const currentTime = selectedTime || endTime;
+        setShowTimePicker(false);
+        setEndTime(currentTime);
+        setSelectedDateTime(currentTime.toISOString());
     };
 
     return (
@@ -71,31 +83,90 @@ function CreateCompetitionScreen ({ navigation }) {
                 <Text style={styles.label}>Answer One</Text>
                 <Input
                     placeholder="Option 1"
-                    onChangeText={setOption1}
+                    onInputChanged={setOption1}
                     value={option1}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Answer Two</Text>
                 <Input
                     placeholder="Option 2"
-                    onChangeText={setOption2}
+                    onInputChanged={setOption2}
                     value={option2}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Answer Three</Text>
                 <Input
                     placeholder="Option 3"
-                    onChangeText={setOption3}
+                    onInputChanged={setOption3}
                     value={option3}
                     style={styles.input}
                 />
                 <Text style={styles.label}>Correct Answer</Text>
                 <Input
                     placeholder="Answer"
-                    onChangeText={setAnswer}
+                    onInputChanged={setAnswer}
                     value={answer}
                     style={styles.input}
                 />
+                <View style={styles.dateTimeContainer}>
+                    <Button title="Select Date" onPress={() => setShowDatePicker(true)} />
+                    <Button title="Select Time" onPress={() => setShowTimePicker(true)} />
+                </View>
+                <Text style={[styles.label, { color: 'white', marginTop: 10 }]}>
+                    Selected Date and Time:
+                </Text>
+                <Text style={[styles.input, { color: 'white' }]}>
+                    {selectedDateTime ? new Date(selectedDateTime).toLocaleString() : ''}
+                </Text>
+
+                {/* Date Picker Modal */}
+                {showDatePicker && (
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={showDatePicker}
+                        onRequestClose={() => setShowDatePicker(false)}
+                    >
+                        <View style={styles.modalBackground}>
+                            <View style={styles.modalContent}>
+                                <DateTimePicker
+                                    value={endTime}
+                                    mode="date"
+                                    display="default"
+                                    onChange={handleDateChange}
+                                />
+                                <Pressable onPress={() => setShowDatePicker(false)}>
+                                    <Text style={styles.btn_text}>Close</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </Modal>
+                )}
+
+                {/* Time Picker Modal */}
+                {showTimePicker && (
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={showTimePicker}
+                        onRequestClose={() => setShowTimePicker(false)}
+                    >
+                        <View style={styles.modalBackground}>
+                            <View style={styles.modalContent}>
+                                <DateTimePicker
+                                    value={endTime}
+                                    mode="time"
+                                    display="default"
+                                    onChange={handleTimeChange}
+                                />
+                                <Pressable onPress={() => setShowTimePicker(false)}>
+                                    <Text style={styles.btn_text}>Close</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </Modal>
+                )}
+
             </ScrollView>
             <Pressable onPress={handleCreateCompetition} style={styles.btn} >
                 <Text style={styles.btn_text}>Create Competition</Text>
@@ -112,7 +183,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000032',
     },
     header: {
-        marginTop: 15, 
+        marginTop: 15,
         color: 'white',
         fontWeight: 'bold',
         fontSize: 40
@@ -139,6 +210,32 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontWeight: '200'
+    },
+    input: {
+        color: 'white',
+        borderBottomColor: 'white',
+        borderBottomWidth: 1,
+        marginBottom: 20,
+        fontSize: 16,
+        paddingVertical: 10,
+    },
+    dateTimeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    modalBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+        alignItems: 'center',
     },
 });
 
