@@ -21,8 +21,8 @@ function Competitions({ navigation }) {
     const handleGettingOfData = async () => {
         setIsLoading(true);
         var allData = await getMyCompList();
-        console.log("CompScreen Log: " + allData);
-        console.log("Auth Log: " + JSON.stringify(auth.currentUser));
+        // console.log("CompScreen Log: " + allData);
+        // console.log("Auth Log: " + JSON.stringify(auth.currentUser));
         setCompItems(allData || []);  // Ensure compItems is an array
         setIsLoading(false);
     };

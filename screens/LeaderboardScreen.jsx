@@ -59,7 +59,7 @@ const LeaderboardScreen = ({ route }) => {
                     <View key={entry.id} style={styles.entry}>
                         <Text style={styles.position}>{index + 1}</Text>
                             <Text style={styles.details}>{entry.userName}</Text>
-                        <Text style={styles.details}>Timestamp: {entry.timestamp.toDate().toLocaleString()}</Text>
+                        <Text style={styles.details}>Finished: {entry.timestamp.toDate().toLocaleString()}</Text>
                     </View>
                 ))}
             </View>

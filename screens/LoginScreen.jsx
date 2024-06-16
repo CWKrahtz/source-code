@@ -20,46 +20,6 @@ const initialState = {
     fomrIsValid: false,
 }
 
-// const LoginScreen = ({ navigation }) => {
-
-// const [email, setEmail] = useState('');
-// const [password, setPassword] = useState('');
-
-//   TODO: Login Function
-// const login = () => {
-//     handleLogin(email, password)
-// }
-
-// const [formState, dispatchFormState] = useReducer(reducer, initialState);
-
-// const inputChangedHandler = useCallback((inputId, inputValue) => {
-//     const result = validateInput(inputId, inputValue);
-//     dispatchFormState({ inputId, validationResult: result, inputValue });
-// }, [dispatchFormState])
-
-// <View style={styles.inputrows}>
-//                     <Text style={styles.label}>Email</Text>
-//                     <TextInput
-//                         style={styles.input}
-//                         placeholder="Email"
-//                         placeholderTextColor='#FFFFFF40'
-//                         keyboardType='address-address'
-//                         onChangeText={newText => setEmail(newText)}
-//                         defaultValue={email} />
-//                 </View>
-//                 <View style={styles.inputrows}>
-//                     <Text style={styles.label}>Password</Text>
-//                     <TextInput
-//                         style={[styles.input, styles.shadowProp]}
-//                         placeholder="Password"
-//                         placeholderTextColor='#FFFFFF40'
-//                         secureTextEntry={true}
-//                         onChangeText={newText => setPassword(newText)}
-//                         defaultValue={password}
-//                     />
-//                 </View>
-// }
-
 function LoginScreen({ navigation }) {
 
     const [formState, dispatchFormState] = useReducer(reducer, initialState);
@@ -89,8 +49,6 @@ function LoginScreen({ navigation }) {
                 <View style={styles.inputrows}>
                     <Text style={styles.label}>Email</Text>
                     <Input
-                        id='email'
-                        // style={styles.input}
                         placeholder="Enter your email"
                         placeholderTextColor='#FFFFFF40'
                         errorText={formState.inputValidities["email"]}
@@ -100,7 +58,6 @@ function LoginScreen({ navigation }) {
                     <Text style={styles.label}>Password</Text>
                     <Input
                         id='password'
-                        // style={styles.input}
                         placeholder="Enter your password"
                         placeholderTextColor='#FFFFFF40'
                         secureTextEntry={true}
@@ -120,7 +77,6 @@ function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: 'grey',
         paddingLeft: 24,
         paddingRight: 24,
         paddingBottom: 24,
@@ -171,12 +127,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
         marginTop: 10,
-    },
-    shadowProp: {
-        // shadowColor: '#FFFFFF',
-        // shadowOffset: {width: 0, height: 5},
-        // shadowOpacity: 0.5,
-        // shadowRadius: 4,
     },
     btn_container: {
         alignItems: 'center',

@@ -1,13 +1,13 @@
 // export default Navigation
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 // auth
-import { auth, getFirebaseApp } from '../firebase';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 // Screens
 import SignupScreen from '../screens/SignupScreen';
 import LoginScreen from '../screens/LoginScreen';

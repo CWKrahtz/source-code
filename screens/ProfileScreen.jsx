@@ -34,7 +34,6 @@ function ProfileScreen({ navigation }) {
                 <Text style={styles.header}>Profile</Text>
                 <Text style={styles.subhead}>your personal detail</Text>
 
-                {/* TODO: Show logged in user info */}
                 <Text style={styles.text}>{profile.fullName}</Text>
                 <Text style={styles.text}>{profile.email}</Text>
 
@@ -87,7 +86,8 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'white',
-        fontSize: 40
+        fontSize: 25,
+        paddingVertical: 10
     }
 
 });
