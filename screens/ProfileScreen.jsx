@@ -34,8 +34,8 @@ function ProfileScreen({ navigation }) {
                 <Text style={styles.header}>Profile</Text>
                 <Text style={styles.subhead}>your personal detail</Text>
 
-                <Text style={styles.text}>{profile.fullName}</Text>
-                <Text style={styles.text}>{profile.email}</Text>
+                {/* <Text style={styles.text}>{profile.fullName}</Text>
+                <Text style={styles.text}>{profile.email}</Text> */}
 
                 <View style={styles.btn_container}>
                     <Pressable style={styles.btn} onPress={handleLogout}>
