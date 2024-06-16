@@ -4,32 +4,6 @@ import { ref, set } from 'firebase/database';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addDoc, doc, setDoc } from "firebase/firestore";
 
-// Function to create a user entry in Firestore (not used directly in this example)
-const createUserInFirestore = async (fullName, email, userId) => {
-    const userData = {
-        fullName,
-        email,
-        userId,
-        signUpDate: new Date().toString(),
-    };
-
-    const dbRef = ref(getDatabase());
-    await set(ref(dbRef, `users/${userId}`), userData);
-    return userData;
-};
-
-// Function to save user data and token to AsyncStorage
-const saveToDataStorage = (token, userId, expiryDate) => {
-    AsyncStorage.setItem(
-        'userData',
-        JSON.stringify({
-            token,
-            userId,
-            expireDate: expiryDate.toISOString(),
-        })
-    );
-};
-
 // Function to handle user login
 export const handleLogin = (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
