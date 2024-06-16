@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "source-code",
-    "slug": "source-code",
+    "name": "SourceCode",
+    "slug": "SourceCode",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,13 +18,21 @@
       "supportsTablet": true
     },
     "android": {
+      "packagename": "com.source.code",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.source.code"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "aa03168e-2113-44e8-b218-e9831ef86431"
+      }
     }
   }
 }
