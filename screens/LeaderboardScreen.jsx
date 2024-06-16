@@ -58,7 +58,7 @@ const LeaderboardScreen = ({ route }) => {
                 {leaderboardData.map((entry, index) => (
                     <View key={entry.id} style={styles.entry}>
                         <Text style={styles.position}>{index + 1}</Text>
-                        <Text style={styles.details}>User: {entry.userName}</Text>
+                            <Text style={styles.details}>{entry.userName}</Text>
                         <Text style={styles.details}>Timestamp: {entry.timestamp.toDate().toLocaleString()}</Text>
                     </View>
                 ))}
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     details: {
+        textAlign: 'left',
         color: 'white',
         fontSize: 14,
     },
