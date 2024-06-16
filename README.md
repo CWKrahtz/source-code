@@ -1,3 +1,5 @@
+<a name="readme-top"></a>
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -59,6 +61,8 @@ Any user should be able to create a competition and compete while it is availabl
 
 The app is aimed to allow multiple users to be logged in (on different devices) and to compete in at least one competition or to create a competition.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ### Built With
 
 This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
@@ -67,13 +71,15 @@ This section should list any major frameworks that you built your project using.
 * [VisualStudioCode](https://code.visualstudio.com/)
 * [Expo](https://expo.dev/)
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Prerequisites
 
@@ -94,6 +100,8 @@ This is an example of how to list things you need to use the software and how to
    npm install
    ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- USAGE EXAMPLES -->
 ## Usage
   [![Signup Screen][signup-screenshot]](https://github.com/CWKrahtz/source-code)
@@ -103,6 +111,8 @@ This is an example of how to list things you need to use the software and how to
   [![Competitions Screen][comp-screenshot]](https://github.com/CWKrahtz/source-code)
   [![Single Comp Screen][single-screenshot]](https://github.com/CWKrahtz/source-code)
   [![Leaderboard Screen][leader-screenshot]](https://github.com/CWKrahtz/source-code)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- Future Implementations -->
@@ -120,13 +130,15 @@ Here are some of the things I would like to tackle on next time I work on the pr
   * Validate all fields are entered
   * Validate that answer is equal to at one answer
   * Improve date and time picker with screen styling
+ 
+ <p align="right">(<a href="#readme-top">back to top</a>)</p>
   
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
@@ -135,7 +147,7 @@ Christian Krahtz - [@krahtz424](https://instagram.com/krahtz424) - 221198@virtua
 
 Project Link: [https://github.com/CWKrahtz/source-code](https://github.com/CWKrahtz/source-code)
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
@@ -144,6 +156,7 @@ Project Link: [https://github.com/CWKrahtz/source-code](https://github.com/CWKra
 * [Firestore](https://firebase.google.com/docs/firestore)
 * [CS Strijdom](https://github.com/DanteCS25)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
