@@ -39,8 +39,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#future-implementations">Future Implementations</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
@@ -106,6 +105,22 @@ This is an example of how to list things you need to use the software and how to
   [![Leaderboard Screen][leader-screenshot]](https://github.com/CWKrahtz/source-code)
 
 
+<!-- Future Implementations -->
+## Future Implementations
+Here are some of the things I would like to tackle on next time I work on the project
+* Profile Screen
+  * Display of competitions entered with amount correct.
+  * Display competitions user created.
+* Competition Screen
+  * Display time stamp the competitions end.
+  * Order competitions from new to old.
+  * display active competitions
+  * create screen to display past competitions
+* Create Competition Screen
+  * Validate all fields are entered
+  * Validate that answer is equal to at one answer
+  * Improve date and time picker with screen styling
+  
 <!-- LICENSE -->
 ## License
 
