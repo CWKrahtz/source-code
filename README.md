@@ -65,7 +65,6 @@ The app is aimed to allow multiple users to be logged in (on different devices) 
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [ReactNative](https://reactnative.dev/docs/environment-setup)
 * [Firestore](https://firebase.google.com/docs/firestore)
 * [VisualStudioCode](https://code.visualstudio.com/)
@@ -75,11 +74,6 @@ This section should list any major frameworks that you built your project using.
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Prerequisites
 
