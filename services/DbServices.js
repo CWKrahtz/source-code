@@ -8,25 +8,20 @@ const db = getFirestore(Firestore)
 //GET ALL COMPATITIONS
 export const getMyCompList = async () => {
     console.log("getMyCompList: function enter")
-    //Making a custom query to add order by or limit to our querying data
-    var q = query( collection(db, "competitions"), orderBy('title', "desc") )//, where("priority", "==", false)
+    
+    var q = query( collection(db, "competitions"), orderBy('title', "desc") )
 
     console.log("getMyCompList: logging q -> " + q)
 
     const querySnapshot = await getDocs(q);
-    var allitems = []//array we want to return
+    var allitems = []
     querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        // console.log(doc.id, " => ", doc.data());
         allitems.push({ ...doc.data(), id: doc.id }) 
-        //push each doc's data to the array I want to return
     });
 
     console.log(allitems)
     console.log("help")
     return allitems
-
-    //cant just use query snapshot as the array of items - need  to access .data()
 }
 
 

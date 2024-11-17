@@ -40,38 +40,33 @@ const SingleComp = ({ route, navigation }) => {
         }
 
         try {
-            // Ensure the user is authenticated
             if (!user) {
                 throw new Error('User not authenticated.');
             }
 
-            const userDocRef = doc(db, 'users', user.uid); // Reference to user document
-            const userSnapshot = await getDoc(userDocRef); // Use getDoc to fetch the document
+            const userDocRef = doc(db, 'users', user.uid);
+            const userSnapshot = await getDoc(userDocRef);
 
             if (!userSnapshot.exists()) {
                 throw new Error('User document not found.');
             }
 
             const userData = userSnapshot.data();
-            const { completedCompetitions = [] } = userData; // Ensure it's always an array
+            const { completedCompetitions = [] } = userData;
 
             if (completedCompetitions.includes(competitionId)) {
                 Alert.alert('You have already completed this competition.');
                 return;
             }
 
-            // Update user document to mark competition as completed
             await updateDoc(userDocRef, {
                 completedCompetitions: [...completedCompetitions, competitionId]
             });
 
-            // Reference to competition document
             const competitionDocRef = doc(db, 'competitions', competitionId);
 
-            // Subcollection reference for storing completion timestamps
             const completionTimestampsRef = collection(competitionDocRef, 'completedTimestamps');
 
-            // Add completion timestamp to subcollection
             await addDoc(completionTimestampsRef, {
                 userId: user.uid,
                 timestamp: serverTimestamp()
@@ -117,7 +112,7 @@ const SingleComp = ({ route, navigation }) => {
                     </Pressable>
                 </View>
             ) : (
-                <Text>Hello</Text>
+                <Text>Something went wrong</Text>
             )}
         </SafeAreaView>
     );
